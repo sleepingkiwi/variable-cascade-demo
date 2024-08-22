@@ -1,0 +1,4 @@
+# we have CSS prefix support for the following browsers:
+> 0.25%,
+not IE 10,
+not IE 11

@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>TLC - Variable Cascade</title>
+	<link rel="stylesheet" href="./variable-cascade-unimportant.css">
+	<script type="module" src="./dist/js/main.js"></script>
+
+	<style>
+		/** Base styling
+		 *  --------------------------------------------------------------------------------------------
+		 *  This Style block is the equivalent of our built main.css styles.
+		 *  - it is not parsed or touched by JS in any way.
+		 *  - it sets sensible defaults that we expect to be overwritten
+		 *  - does not contain even the DE variables
+		**/
+		:root {
+			/*
+			Example - a part of a default typographic scale.
+			- sets some base level defaults
+			- establishes high level variable names
+			- these are basically 'safe' variables that we can use as defaults in our components
+			- 🔥 we expect these values to be overwritten by the DE
+			- these high level (non-specific) styles are what comprise the basic 'brand'
+			- they are what you would configure/customise at the highest (DE) level and will then be available as options to customise articles/blocks etc.
+			- we could conceivably let TLC add more options via UI
+			*/
+			--s-1: 0.8rem;
+			--s0: 1rem;
+			--s1: 1.25rem;
+			--s2: 1.5625rem;
+			--s3: 1.953125rem;
+
+			/*
+			Example 2 - some colour definitions
+			- as above!
+			*/
+			--colour-primary: #43505d;
+			--colour-highlight: #e57066;
+			--colour-background-primary: #f7f7f7;
+		}
+
+		/*
+		Component styling
+		- Components use their own variables but these opt in to 'safe' high level variables
+		- Component variables map 1:1 with props that can be passed/configured in the CMS
+		- sm/lg variants are used to distinguish mobile (small screen) and desktop (large screen)
+		- we have used a mobile first cascade here (i.e. the mobile version is the default and if you override it the desktop version will mirror it unless explicitly changed also) - but the reality might be that TLC work the other way around. This will come down to how we present things in the CMS...
+		*/
+		.Heading {
+			--Heading-sm-font-size: var(--s2);
+			--Heading-lg-font-size: var(--Heading-sm-font-size);
+			--Heading-sm-color: var(--colour-primary);
+			--Heading-lg-color: var(--Heading-sm-color);
+			/*
+			we could get quite granular with our default tokens
+			- instead of highlight colour this could be using --colour-border
+			- or even something like --colour-heading-underlines if we wanted to be really specific
+			*/
+			--Heading-sm-border-color: var(--colour-highlight);
+			--Heading-lg-border-color: var(--Heading-sm-border-color);
+			/* ...etc. */
+
+			font-size: var(--Heading-sm-font-size);
+			color: var(--Heading-sm-color);
+
+			/*
+			not everything has to be a variable!
+			there will obviously be lots of elements of components that are non-configurable
+			or at least not affected by the design token cascade
+			*/
+			text-decoration: underline;
+			text-underline-offset: 0.1em; /* scale with the font size */
+			text-decoration-color: var(--Heading-sm-border-color);
+		}
+
+		/*
+		or whatever desktop/mobile breakpoint we've decided
+		probably a sass variable rather than hardcoded...
+		*/
+		@media screen and (min-width: 45em) {
+			.Heading {
+				font-size: var(--Heading-lg-font-size);
+				color: var(--Heading-lg-color);
+				text-decoration-color: var(--Heading-lg-border-color);
+			}
+		}
+
+		/*
+		variant class - used for component specific variables/props
+		*/
+		.Heading--no-underline {
+			text-decoration: none;
+		}
+
+		.Paragraph {
+			--Paragraph-sm-font-size: var(--s0);
+			--Paragraph-lg-font-size: var(--Paragraph-sm-font-size);
+			--Paragraph-sm-color: var(--colour-primary);
+			--Paragraph-lg-color: var(--Paragraph-sm-color);
+
+			font-size: var(--Paragraph-sm-font-size);
+			color: var(--Paragraph-sm-color);
+		}
+
+		@media screen and (min-width: 45em) {
+			.Paragraph {
+				font-size: var(--Paragraph-lg-font-size);
+				color: var(--Paragraph-lg-color);
+			}
+		}
+
+		/*
+		What about nested elements?
+		- anchors (for example) inside paragraphs will inherit these values from the Article level
+		- these links will pick up the value of --colour-highlight for wherever they're nested.
+		- if we want a component to be able to control the styling of it's children we'd need to open up specific props (i.e. --Paragraph-sm-link-color) OR look at allowing style variant overrides at component/block level instead of stopping with articles...
+		*/
+		a,
+		a:active {
+			color: var(--colour-highlight);
+			text-decoration-color: var(--colour-highlight);
+			text-decoration: underline;
+			text-underline-offset: 0.1em; /* scale with the font size */
+			transition: all ease 400ms;
+			transition-property: color;
+		}
+		a:hover,
+		a:focus {
+			color: var(--colour-primary);
+		}
+	</style>
+</head>
+<body>
+	<div id="jsonEditor"></div>
+	<section id="sectionOne">
+		<div class="top">
+			<h2>
+				<em>Step One</em> - Establish a primary brand
+			</h2>
+			<p>
+				This would happen at the highest level - via a settings menu for the Digital Edition
+			</p>
+			<p>
+				You're setting up the basic shape of your brand and (potentially?) naming the variables you can use further down the line.
+			</p>
+			<p>
+				The built-in variables that our components will be using by default are the ones that will have the biggest impact when changed and we have to consider how granular we get with these variables... In a perfect world the settings and customisations at this stage should be enough to establish a fairly strong brand without having to tweak individual component settings every time they are used.
+			</p>
+			<p class="notification">
+				<strong>Possible Scenario</strong><br>I want to customise my brand so that my buttons all have a specific padding, font-size and border radius.<br><br>Should we expose fairly specific variables like that at this stage? i.e. <code>Button Font Size</code> rather than just allowing very high level variables to be customised i.e. <code>--fs1</code>...
+			</p>
+			<p>
+				Allowing for the client to add new variables feels useful conceptually but has <em>implications</em> for us to consider, particularly in terms of their removal.
+			</p>
+			<p>
+				🔥 <strong>The CMS will need to be aware of the <em>type</em> of variables</strong> (i.e. font sizes need numbers vs colours need colour pickers etc.)
+			</p>
+		</div>
+		<div id="brandInputs"></div>
+	</section>
+	<section id="sectionTwo">
+		<div class="top">
+			<h2>
+				<em>Step Two</em> - Optionally create some brand variants
+			</h2>
+			<p>
+				The brand created during step one will automatically apply across the whole Digital Experience Platform, i.e. to all issues/articles within the current publication.
+			</p>
+			<p>
+				By creating <em>Brand Variants</em> via the CMS, a client is able to create reusable variations of their core branding. Customising as many of the variables from the core brand as they want.
+			</p>
+			<p>
+				Brand variants cannot add new variables - they can only customise what you have set up at the DE level. They could customise the whole brand or just one or two variables. Client side styles will fall back to the default/base (Digital Experience Platform level) style for any definitions missing in a brand variant.
+			</p>
+			<p>
+				In the CMS these would be created as a post type of their own and then assigned to issues/articles. This helps create reusable styles and minimise the amount of settings duplication required when creating a new article/issue.
+			</p>
+		</div>
+		<div id="variantInputs"></div>
+	</section>
+	<section id="sectionThree">
+		<div class="top">
+			<h2>
+				<em>Step Three</em> - Customise Issues/Articles/Components
+			</h2>
+			<p class="notification">
+				<strong>
+				This is where I gave up building UI...
+				</strong><br>
+				You can directly edit the JSON to apply variants and see what works (click the 🚀)!
+			</p>
+			<h4>Article / Issue styles</h4>
+			<p>
+				Via the CMS you should be able to optionally assign published Brand Variants to articles and/or issues to customise large amounts of content in one go.
+			</p>
+			<p>
+				I imagine this would be a high level setting for issue/article types in the CMS, with a <code>&lt;select&gt;</code> filled with available brand variants (or the option to choose none) presented for each article/issue in config/settings menus.
+			</p>
+			<h4>Component level styles</h4>
+			<p>
+				Individual components will expose props to be customised via the CMS.
+			</p>
+			<p>
+				Look at the CSS cascade for the components defined at the top of this file, in combination with the example props passed in our sample JSON to see how this works in practice on the front-end.
+			</p>
+			<p>
+				The following is a <strong title="Sorry I could not be bothered to code this in!">non-functional</strong> example of how the backend might present this sort of functionality. In this example the Heading component is letting you customise it's colour value.
+			</p>
+			<div class="settings-group settings-group--nonfunctional">
+				<h3>
+					Heading Colour
+				</h3>
+				<ul>
+					<li>
+						<div>
+							<label class="select-input-other-toggle">
+								<select>
+									<option>Default</option>
+									<option value="colour-primary">primary (Colour)</option><option value="colour-highlight">highlight (Colour)</option><option value="colour-background-primary">background (Colour)</option><option value="other">Other</option>
+								</select>
+								<input type="text">
+							</label>
+						</div>
+					</li>
+					<li>
+						<p>
+							<small>🔥 The <em>other</em> option presented here allows for free text entry and should probably be enabled on a case by case (i.e. per Component type/specific prop) basis - in many cases it's probably better to limit editors to only using their existing brand values....</small>
+						</p>
+					</li>
+				</ul>
+			</div>
+			<p class="notification">
+				<strong>
+					Handling component customisation in the CMS
+				</strong><br>
+				If I have a Heading component with a colour prop - I need to communicate to the CMS that this should be able to receive the value of any colour variables but not any numeric variables... Does it need to communicate it's default variable to the CMS too?
+			</p>
+			<p>
+				<strong>
+					🔥 Brand Variants at the component level?
+				</strong>
+				This may be a contentious point? But I like the idea that container components (i.e. the ContentArea component in this example) could apply a brand variant too - this trickles down to all of their children...
+			</p>
+			<p>
+				In the next sections we'll be rendering articles derived from the JSON. Play with the settings here to visualise how things cascade!
+			</p>
+		</div>
+	</section>
+	<section id="sectionFour">
+		<div class="top">
+			<h2>
+				<em>Step Four</em> - Read Some Articles!
+			</h2>
+			<h4>Rendering CSS</h4>
+			<p>
+				Our build process (or in this demo the client side code) parses the brand variants from our JSON and constructs CSS which is rendered in the <code>&lt;head&gt;</code> (or in this demo inline above the article content).
+			</p>
+			<p>
+				This is an example of two CSS variables, first the base value which is parsed from our DE level and then some brand variants which tweak those values.<br><small>Remember that for each of our default variables we will also have a fallback in our pre-rendered CSS - see the head of this file!</small>
+			</p>
+			<pre>
+&lt;style&gt;
+	body {
+		--s-1: 1.25rem;
+		--colour-primary: #000000;
+	}
+
+	.has-bv--some-variant,
+	article.has-bv--some-variant,
+	article .has-bv--some-variant.has-bv--some-variant {
+		--s-1: 2rem;
+		--colour-primary: #121212;
+	}
+
+	.has-bv--some-other-variant,
+		<small>/*
+		articles have higher specificity than issues
+		*/</small>
+	article.has-bv--some-other-variant,
+		<small>/*
+		This is a specificity hack
+		to make sure that components in articles override article level styles
+		There may be a better way to handle this?
+		Note that:
+			article *.has-bv--some-variant
+		is not more specific than
+			article.has-bv--some-variant
+		*/</small>
+	article .has-bv--some-other-variant.has-bv--some-other-variant {
+		--s-1: 2.3rem;
+	}
+&lt;/style&gt;
+			</pre>
+			<h4>Rendering HTML</h4>
+			<p>
+				Article nodes are wrapped in an issue node, both of these DOM nodes are given classes matching their current brand variant (or no class to inherit the base DE styles wholesale).
+			</p>
+			<p>
+				Individual components are able to override their own css variables at the component level based on the style values selected in the CMS. In the following example code:
+			</p>
+			<ul>
+				<li>
+					The issue has selected a Brand Variant of <code>some-variant</code>
+				</li>
+				<li>
+					The article has not selected a Brand Variant
+				</li>
+				<li>
+					The first Heading component has customised it's colour value, via the layout builder in the CMS, to use <code>--colour-highlight</code>
+				</li>
+				<li>
+					The second Heading component has NOT customised it's colour value. Because the component level css (see line 59 of this file) defines this rule: <code>--Heading-sm-color: var(--colour-primary);</code>, the colour of the second heading will be <code>#121212</code>, pulled from the <code>some-variant</code> Brand Variant that the current issue has opted into.
+				</li>
+			</ul>
+			<pre>
+&lt;div class="Issue has-bv--some-variant"&gt;
+	&lt;article class="Article"&gt;
+		&lt;Heading style="--Heading-sm-color: --colour-highlight;"&gt;
+			Heading One
+		&lt;/Heading&gt;
+
+		&lt;Heading&gt;
+			Heading Two
+		&lt;/Heading&gt;
+	&lt;/article&gt;
+&lt;/div&gt;
+			</pre>
+		</div>
+	</section>
+	<section id="liveDemos">
+		<div class="top">
+			<h4>Live examples</h4>
+			<p class="notification">
+				Select an article from the select below to see how the current JSON (inside the 🚀 menu) is rendered into content/styles.<br>Inspect the following block below to see the inline style blocks etc: <code>#articleRenderer .article-content</code>
+			</p>
+		</div>
+		<div id="articleRenderer"></div>
+	</section>
+
+	<script>
+		// add a body class if we don't want any faff
+		const searchParams = new URLSearchParams(window.location.search);
+		if (searchParams.has('no-faff')) {
+			document.body.classList.add('no-faff');
+		}
+	</script>
+</body>
+</html>

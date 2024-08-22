@@ -1,0 +1,204 @@
+/** CSS for styling the variable cascade demo
+ *  ------------------------------------------------------------------------------------------------
+ *  unimportant to the concept the demo is trying to illustrate. Just structural bits
+**/
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+}
+
+html {
+	height: 100%;
+	font-size: 1rem;
+}
+
+body {
+	font-family: sans-serif;
+	line-height: 1.5;
+	margin: 0;
+	padding: 0.5rem;
+	color: #43505d;
+}
+
+section {
+	padding: 3rem 1rem;
+	min-height: 100vh;
+	display: flex;
+	flex-direction: column;
+}
+
+section:nth-child(2n+1) {
+	background: #f7f7f7;
+}
+
+.no-faff section:not(#liveDemos) {
+	display: none;
+}
+
+.notification {
+	background-color: rgb(242 248 255);
+	padding: 0.5rem;
+	border-radius: 0.25rem;
+	border-left: 4px solid #7493d5;
+}
+
+.settings-group--nonfunctional {
+	background-color: rgb(0 0 0 / 0.1);
+	padding: 0.5rem;
+	border-radius: 0.25rem;
+	border-left: 4px solid rgb(0 0 0 / 0.3);
+}
+
+.top,
+.top + div {
+	width: 100%;
+	max-width: 60rem;
+	margin: 0 auto;
+}
+
+.top + div {
+	padding: 1rem 0;
+	width: 100%;
+	flex: 1;
+}
+
+.top > pre {
+	white-space: pre-wrap;
+	background-color: #43505d;
+	border-radius: 0.5rem;
+	color: #e2e6ea;
+	padding: 1rem;
+	display: block;
+}
+
+.top > pre small {
+	opacity: 0.75;
+}
+
+details {
+	margin-top: 1rem;
+}
+
+summary {
+	color: var(--colour-highlight);
+}
+
+/** Settings
+ *  ------------------------------------------------------------------------------------------------
+**/
+.settings-group input,
+.settings-group select {
+	padding: 0.5rem;
+}
+
+.select-input-other-toggle input {
+	display: none;
+}
+.select-input-other-toggle select:has(option:checked[value=other]) + input {
+	display: block;
+	margin-top: 0.25rem;
+}
+
+.settings-group {
+	width: 100%;
+	max-width: 60rem;
+	margin: 0 auto;
+}
+
+.settings-group button {
+	cursor: pointer;
+	background-color: rgb(0 0 0 / 0.1);
+	border-radius: 0.5rem;
+	padding: 0.5rem 1rem;
+	border: 0;
+}
+
+.settings-group > ul {
+	padding: 0;
+}
+
+.settings-group > ul li {
+	display: flex;
+	gap: 0.5rem;
+	padding: 0.25rem;
+	align-items: flex-end;
+	justify-content: flex-start;
+}
+
+.settings-group label span {
+	display: block;
+	font-size: 0.8rem;
+	opacity: 0.8;
+}
+
+/* css var names */
+.settings-group > ul li div:nth-child(3) {
+	color: var(--colour-highlight);
+	opacity: 0.5;
+	padding-bottom: 0.5rem;
+}
+
+/** JSON editor
+ *  ------------------------------------------------------------------------------------------------
+**/
+
+.json-editor {
+	position: fixed;
+	z-index: 99;
+	right: 0;
+	height: 100%;
+	width: 100%;
+	width: calc(100% - 5rem);
+	max-width: 700px;
+	top: 0;
+	transform: translateX(100%);
+	transition: all 400ms ease;
+	transition-property: transform;
+}
+
+.json-editor--open {
+	transform: translateX(0);
+}
+
+.json-editor > div {
+	height: 100%;
+	padding: 2rem;
+	pointer-events: none;
+	transition: all 400ms ease;
+	background: rgb(0 0 0 / 0.2);
+	backdrop-filter: blur(2px);
+}
+
+.json-editor--open > div {
+	pointer-events: auto;
+}
+
+.json-editor > button {
+	position: absolute;
+	cursor: pointer;
+	top: 2rem;
+	left: -4rem;
+	background: rgb(0 0 0 / 0.2);
+	backdrop-filter: blur(2px);
+	width: 4rem;
+	height: 4rem;
+	border-radius: 0.5rem 0 0 0.5rem;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border: 0;
+}
+
+.debug-output {
+	background-color: #43505d;
+	border-radius: 0.5rem;
+	color: #e2e6ea;
+	min-height: 12rem;
+	height: 100%;
+	overflow: scroll;
+	padding: 1rem;
+	width: 100%;
+	display: block;
+	margin: 0 auto 3rem;
+}
