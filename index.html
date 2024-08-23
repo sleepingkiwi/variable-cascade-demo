@@ -50,7 +50,7 @@
 		- we have used a mobile first cascade here (i.e. the mobile version is the default and if you override it the desktop version will mirror it unless explicitly changed also) - but the reality might be that TLC work the other way around. This will come down to how we present things in the CMS...
 		*/
 		.Heading {
-			--Heading-sm-font-size: var(--s2);
+			--Heading-sm-font-size: var(--s3);
 			--Heading-lg-font-size: var(--Heading-sm-font-size);
 			--Heading-sm-color: var(--colour-primary);
 			--Heading-lg-color: var(--Heading-sm-color);
@@ -188,7 +188,7 @@
 			</h2>
 			<p class="notification">
 				<strong>
-				This is where I gave up building UI...
+				This is where I gave up building functional UI for now...
 				</strong><br>
 				You can directly edit the JSON to apply variants and see what works (click the 🚀)!
 			</p>
@@ -208,6 +208,9 @@
 			</p>
 			<p>
 				The following is a <strong title="Sorry I could not be bothered to code this in!">non-functional</strong> example of how the backend might present this sort of functionality. In this example the Heading component is letting you customise it's colour value.
+			</p>
+			<p>
+				Notice that it only lists brand vairables of the colour type. There is also an option to choose <em>Other</em> which would allow for free text entry/colour picker, although I do not think we should expose this functionality in all cases?
 			</p>
 			<div class="settings-group settings-group--nonfunctional">
 				<h3>
@@ -252,14 +255,14 @@
 	<section id="sectionFour">
 		<div class="top">
 			<h2>
-				<em>Step Four</em> - Read Some Articles!
+				<em>Step Four</em> - Rendering styles and DOM!
 			</h2>
 			<h4>Rendering CSS</h4>
 			<p>
-				Our build process (or in this demo the client side code) parses the brand variants from our JSON and constructs CSS which is rendered in the <code>&lt;head&gt;</code> (or in this demo inline above the article content).
+				Our build process (or in the case of this demo, the client side code) parses the brand variants from our JSON and constructs CSS which is rendered in the <code>&lt;head&gt;</code> (or in this demo inline above the article content).
 			</p>
 			<p>
-				This is an example of two CSS variables, first the base value which is parsed from our DE level and then some brand variants which tweak those values.<br><small>Remember that for each of our default variables we will also have a fallback in our pre-rendered CSS - see the head of this file!</small>
+				This is an example of two CSS variables, first the base value which is parsed from our DE level and then some brand variants which tweak those values.<br><small>Remember that for each of our default variables we also have a fallback in our pre-rendered CSS - see the head of this file!</small>
 			</p>
 			<pre>
 &lt;style&gt;
@@ -310,9 +313,19 @@
 				</li>
 				<li>
 					The first Heading component has customised it's colour value, via the layout builder in the CMS, to use <code>--colour-highlight</code>
+					<ul>
+						<li>
+							The actual colour of the first heading will then depend on whether the <code>some-variant</code> brand variant has customised <code>--colour-highlight</code>. If the brand variant has not customised the highlight colour, then this first heading will be whatever value is assigned to <code>--colour-highlight</code> at the Digital Edition level.
+						</li>
+					</ul>
 				</li>
 				<li>
-					The second Heading component has NOT customised it's colour value. Because the component level css (see line 59 of this file) defines this rule: <code>--Heading-sm-color: var(--colour-primary);</code>, the colour of the second heading will be <code>#121212</code>, pulled from the <code>some-variant</code> Brand Variant that the current issue has opted into.
+					The second Heading component has NOT customised it's colour value.
+					<ul>
+						<li>
+							Because the component level css (see line 59 of this file) defines this rule: <code>--Heading-sm-color: var(--colour-primary);</code>, the colour of the second heading will be <code>#121212</code>, pulled from the <code>some-variant</code> Brand Variant that the current issue has opted into.
+						</li>
+					</ul>
 				</li>
 			</ul>
 			<pre>

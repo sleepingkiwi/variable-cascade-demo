@@ -1,3 +1,5 @@
+import { ArticleContentRenderer } from './components/ArticleContentRenderer.js';
+
 export const view = (state) => {
 	if (
 		!state?.sharedState?.branding?.base
@@ -34,7 +36,7 @@ export const view = (state) => {
 			return `--${brandingKey}: ${val};`;
 		});
 
-		return `${classes}{ ${rules} }`;
+		return `${classes}{ ${rules.join(' ')} }`;
 	});
 	const variantStyles = state.HTML`<style>
 		${variantRules.join(' ')}
@@ -115,9 +117,23 @@ export const view = (state) => {
 			</li>
 		</ul>`;
 
+		const articleContentHtml = state.HTML`
+			<div
+				id=${`issue--${currentArticleObject.issue}`}
+				class=${`Issue${state.sharedState.issues[currentArticleObject.issue].brandVariant ? ` has-bv--${state.sharedState.issues[currentArticleObject.issue].brandVariant}` : ''}`}
+			>
+				<article
+					id=${`article--${currentArticle}`}
+					class=${`Article${currentArticleObject.brandVariant ? ` has-bv--${currentArticleObject.brandVariant}` : ''}`}
+				>
+					${ArticleContentRenderer(state, currentArticleObject.content || [])}
+				</article>
+			</div>
+		`;
+
 		articleHtml = state.HTML`
 		${breadcrumbs}
-		<h2 class="Heading">${currentArticleObject.title}</h2>
+		${articleContentHtml}
 		`;
 	}
 

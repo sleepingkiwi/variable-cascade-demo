@@ -57,7 +57,10 @@ export const state = {
 		variants: {
 			variantOne: {
 				'colour-primary': {
-					value: '#42505d',
+					value: '#50425d',
+				},
+				'colour-highlight': {
+					value: '#66ff66',
 				},
 			},
 			variantTwo: {
@@ -98,12 +101,20 @@ export const state = {
 				{
 					type: 'Heading',
 					props: {},
-					content: 'This is a heading',
+					styleProps: {},
+					content: 'This is a heading for Article One in Issue One',
 				},
 				{
 					type: 'Paragraph',
 					props: {},
-					content: 'This is a paragraph - lorem ipsum...',
+					styleProps: {},
+					content: 'Issue One has opted into the brand variant `variantOne` so the styles here should mostly reflect what you have defined as a base style, with any customisations made in `variantOne` applied over the top (using the default JSON you should see a green underline on the heading above, this is defined in the `variantOne` brand variant)!',
+				},
+				{
+					type: 'Paragraph',
+					props: {},
+					styleProps: {},
+					content: 'Lorem ipsum odor amet, consectetuer adipiscing elit. Malesuada id elit metus purus finibus platea sem. Metus finibus tortor blandit porttitor non metus ex. Urna ligula tempor feugiat primis posuere. Semper velit natoque nunc montes libero. Eleifend consequat dignissim condimentum vitae praesent ac. Nisl pretium gravida pulvinar elit imperdiet et eleifend. Interdum vestibulum venenatis felis ultricies curabitur, fermentum phasellus tempus gravida. Maximus quam adipiscing maecenas inceptos class vitae orci cubilia.',
 				},
 				{
 					type: 'Heading',
@@ -119,10 +130,11 @@ export const state = {
 				{
 					type: 'Paragraph',
 					props: {},
-					content: 'This is a paragraph - lorem ipsum...',
+					styleProps: {},
+					content: 'The heading above should have the colour of `--colour-highlight` on small screens and `purple` on desktop! These customisations would have been made in the layout builder via the CMS - see the `props` and `styleProps` in the JSON',
 				},
 				{
-					// this is WIP - not rendering these guys yet!
+					// this is WIP - not rendering these guys at all yet!
 					type: 'ContentArea',
 					props: {
 						'--ContentArea--columns': {
@@ -172,19 +184,70 @@ export const state = {
 			brandVariant: '',
 			issue: 'issueOne',
 			title: 'Article Two',
-			content: [],
+			content: [
+				{
+					type: 'Heading',
+					props: {},
+					content: 'This is Article Two, from Issue One',
+				},
+				{
+					type: 'Paragraph',
+					props: {},
+					content: 'Lorem ipsum odor amet, consectetuer adipiscing elit. Malesuada id elit metus purus finibus platea sem. Metus finibus tortor blandit porttitor non metus ex. Urna ligula tempor feugiat primis posuere. Semper velit natoque nunc montes libero. Eleifend consequat dignissim condimentum vitae praesent ac. Nisl pretium gravida pulvinar elit imperdiet et eleifend. Interdum vestibulum venenatis felis ultricies curabitur, fermentum phasellus tempus gravida. Maximus quam adipiscing maecenas inceptos class vitae orci cubilia.',
+				},
+				{
+					type: 'Paragraph',
+					props: {},
+					styleProps: {
+						'sm-font-size': 'var(--s1)',
+					},
+					content: 'This paragraph has opted itself into a bigger font size (look at the styleProps in the json). This would have been chosen at the CMS level',
+				},
+			],
 		},
 		articleThree: {
 			brandVariant: '',
 			issue: 'issueTwo',
 			title: 'Article Three',
-			content: [],
+			content: [
+				{
+					type: 'Heading',
+					props: {},
+					content: 'This is Article One, from Issue Two',
+				},
+				{
+					type: 'Paragraph',
+					props: {},
+					content: 'This issue hasn\'t opted into a brand variant. Neither has this article. All styles in this article should reflect what you have set up as a base brand!',
+				},
+				{
+					type: 'Paragraph',
+					props: {},
+					content: 'Commodo mi tortor hac viverra maximus sit. Tristique himenaeos curabitur molestie tristique dictum sollicitudin imperdiet. Orci orci pulvinar senectus facilisis in mattis nisi tincidunt. Convallis lobortis ipsum interdum pellentesque facilisi in sed. Ligula venenatis congue pretium class aenean habitant sapien varius? Congue curae curae porttitor ac commodo potenti quisque velit primis. Consequat finibus ullamcorper vulputate efficitur non at tortor gravida nec. Taciti id odio lacinia magnis nostra. Lectus magnis suscipit enim posuere nullam dolor orci turpis.',
+				},
+			],
 		},
 		articleFour: {
-			brandVariant: '',
+			brandVariant: 'variantTwo',
 			issue: 'issueTwo',
 			title: 'Article Four',
-			content: [],
+			content: [
+				{
+					type: 'Heading',
+					props: {},
+					content: 'This is Article Two, from Issue Two',
+				},
+				{
+					type: 'Paragraph',
+					props: {},
+					content: 'This issue hasn\'t opted into a brand variant. However, article two has opted into the `variantTwo` brand variant! Based on the default settings in this JSON file, that means you should see slightly bigger paragraph font sizing here!',
+				},
+				{
+					type: 'Paragraph',
+					props: {},
+					content: 'Commodo mi tortor hac viverra maximus sit. Tristique himenaeos curabitur molestie tristique dictum sollicitudin imperdiet. Orci orci pulvinar senectus facilisis in mattis nisi tincidunt. Convallis lobortis ipsum interdum pellentesque facilisi in sed. Ligula venenatis congue pretium class aenean habitant sapien varius? Congue curae curae porttitor ac commodo potenti quisque velit primis. Consequat finibus ullamcorper vulputate efficitur non at tortor gravida nec. Taciti id odio lacinia magnis nostra. Lectus magnis suscipit enim posuere nullam dolor orci turpis.',
+				},
+			],
 		},
 	},
 };
